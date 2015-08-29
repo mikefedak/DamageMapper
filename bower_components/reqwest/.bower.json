@@ -1,0 +1,15 @@
+{
+  "name": "reqwest",
+  "homepage": "https://github.com/ded/reqwest",
+  "version": "2.0.2",
+  "_release": "2.0.2",
+  "_resolution": {
+    "type": "version",
+    "tag": "v2.0.2",
+    "commit": "d440028f4de29cb6a9f395414a10d03f0cca6583"
+  },
+  "_source": "git://github.com/ded/reqwest.git",
+  "_target": "~2.0.2",
+  "_originalSource": "reqwest",
+  "_direct": true
+}

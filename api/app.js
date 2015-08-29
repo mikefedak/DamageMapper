@@ -9,11 +9,26 @@ var express = require('express')
 
 var app = module.exports = express.createServer();
 
+var allowCrossDomain = function(req, res, next) {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization, Content-Length, X-Requested-With');
+
+    // intercept OPTIONS method
+    if ('OPTIONS' == req.method) {
+      res.send(200);
+    }
+    else {
+      next();
+    }
+};
+
 // Configuration
 
 app.configure(function(){
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
+  app.use(allowCrossDomain);
   app.use(express.bodyParser());
   app.use(express.methodOverride());
   app.use(app.router);
@@ -33,6 +48,9 @@ app.set('view options', {
 })
 
 
+
+
+
 // Routes
 
 app.get('/', routes.index);
@@ -42,10 +60,9 @@ app.post('/points', function(req,res){
     getPoints(req.body, res);
 })
 
-app.listen(3000, function(){
+app.listen(3001,function(){
   console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);
 });
-
 
 
 
