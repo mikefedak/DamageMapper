@@ -1,0 +1,75 @@
+<html>
+	<head>
+		<title>Dominica TS Erika Damage Map</title>
+		 <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css" />
+		 <link rel="stylesheet" href="style.css" />
+
+	</head>
+	<body>
+		 <script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+ 		 <div id="map"></div>
+	</body>
+	<footer>
+		<script>
+			var map = L.map('map')
+			
+			  map.on('load', function(e) {
+				  console.log('load');
+	            requestPoints(e.target.getBounds());
+	          });
+			  
+			  map.setView([15.4, -61.3], 11);
+
+	          map.on('moveend', function(e) {
+				  console.log('move end');
+	            requestPoints(e.target.getBounds());
+	          });
+			
+			var osmUrl='http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+			var osmAttrib='Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
+			var osm = new L.TileLayer(osmUrl, {attribution: osmAttrib});
+			osm.addTo(map);		
+			
+
+
+
+			
+			function httpGetAsync(theUrl, bounds, callback)
+				{
+				    var xmlHttp = new XMLHttpRequest();
+				    xmlHttp.onreadystatechange = function() { 
+				        if (xmlHttp.readyState === 4 && xmlHttp.status === 200)
+				            callback(xmlHttp.responseText);
+				    }
+				    xmlHttp.open("POST", theUrl, true); // true for asynchronous 
+					xmlHttp.setRequestHeader('Content-Type', 'application/json; charset=UTF-8');
+				    xmlHttp.send(bounds);
+				}
+			
+		    function requestPoints(bounds) {
+			  console.info('bounds', bounds);
+			  httpGetAsync('http://localhost:3000/points', bounds, function(res){
+				  console.info('response', res);
+				  
+			  })
+				
+	          
+	        }
+		        
+	        // function parseResponseCadastre(data) {
+	        //   if (cadastralLayer != undefined)
+	        //   {
+	        //     map.removeLayer(cadastralLayer);
+	        //   }
+	        //   cadastralLayer = new L.GeoJSON();
+	        //   cadastralLayer.on('featureparse', function(e) {
+	        //     e.layer.setStyle({ color:  '#003300', weight: 2, fill: true, fillColor: '#009933' });
+	        //   });
+	        //   cadastralLayer.addGeoJSON(data);
+	        //   map.addLayer(cadastralLayer);
+	        // }
+
+		</script>
+
+	</footer>
+</html>
