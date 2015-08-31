@@ -21,17 +21,43 @@ map.on('load', function (e) {
 
 map.setView([15.4, -61.3], 11);
 
+var tilelayer = L.tileLayer('http://{s}.tile.openstreetmap.fr/hot/{z}/{x}/{y}.png', {maxZoom: 20, attribution: 'Data \u00a9 <a href="http://www.openstreetmap.org/copyright"> OpenStreetMap Contributors </a> Tiles \u00a9 HOT'}).addTo(map)
 
-var osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-var osmAttrib = 'Map data © <a href="http://openstreetmap.org">OpenStreetMap</a> contributors';
-var osm = new L.TileLayer(osmUrl, { attribution: osmAttrib });
-osm.addTo(map);
+var geocoder = L.Control.geocoder({
+    collapsed: false,
+    
+}).addTo(map);
+
+
+
+// getting all the markers at once
+function getAllMarkers() {
+
+    var allMarkersObjArray = []; // for marker objects
+    var allMarkersGeoJsonArray = []; // for readable geoJson markers
+
+    $.each(map._layers, function (ml) {
+
+        if (map._layers[ml].feature) {
+
+            allMarkersObjArray.push(this)
+            allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
+        }
+    })
+
+    console.log(allMarkersObjArray);
+};
+
+geocoder.markGeocode = function(result) {
+    map.fitBounds(result.bbox);
+};
 
 
 
 var addEvent = L.Control.extend({
     options: {
-        position: 'bottomright'
+        position: 'bottomright',
+        placeholder: 'Press enter to search'
     },
 
     onAdd: function (map) {

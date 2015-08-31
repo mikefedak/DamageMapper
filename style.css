@@ -21,3 +21,19 @@ body {
         height: 20px;
         line-height: 20px;
 }
+
+.leaflet-control-geocoder-expanded {
+    height:48px;
+}
+
+.leaflet-control-geocoder-form{
+    margin-bottom: 0px;
+}
+
+.leaflet-control-geocoder-form .undefined{
+    margin-bottom: 0px;
+}
+
+.leaflet-control-geocoder-alternatives{
+    background-color: ghostwhite;
+}
