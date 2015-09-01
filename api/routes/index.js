@@ -14,6 +14,15 @@ router.post('/points', function (req, res, next) {
   getPoints(req.body, res);
 });
 
+
+router.post('/upload', function(){
+  
+  
+  
+});
+
+
+
 function getPoints(bounds, res) {
 
 
