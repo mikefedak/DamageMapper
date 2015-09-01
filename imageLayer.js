@@ -7,7 +7,7 @@ L.Instagram = L.FeatureGroup.extend({
 		popup: {
 			className: 'leaflet-popup-instagram'
 		},		
-		imageTemplate: '<a href="{link}" title="View on Instagram"><img src="{image_standard}"/></a><p>{caption}</a></p>',
+		imageTemplate: '<a href="{link}" title="View Larger Image"><img src="{image_standard}"/></a><p>{caption}</a></p>',
 		// videoTemplate: '<a href="{link}" title="View on Instagram"><video autoplay controls poster="{image_standard}"><source src="{video_standard}" type="video/mp4"/></video></a><p>{caption}</a></p>', 	
 		onClick: function(evt) {
 			var image    = evt.layer.image,
@@ -62,6 +62,7 @@ L.Instagram = L.FeatureGroup.extend({
 	},
 
 	_parse: function (images) {
+		
 		for (var i = 0, len = images.length; i < len; i++) {
 			var image = images[i];
 			if (image.images) { // Instagram API
