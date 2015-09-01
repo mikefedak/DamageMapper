@@ -118,7 +118,7 @@ function requestPoints(bounds) {
       , error: function(err){console.info('error',err)}
       , success: function (resp) {
           console.info('points gotten',resp);
-          L.geoJson(resp
+          L.geoJson(resp.rows[0]["row to json"]
             , {
                 
             }).addTo(map);
