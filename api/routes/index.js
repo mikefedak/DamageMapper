@@ -52,13 +52,7 @@ function getPoints(bounds, res) {
         
                 
              
-    //        sql = sql + 'where geom && ST_GeomFromText(\'SRID=3857;POLYGON(($1 $2,$3 $4,$5 $6,$7 $8,$9 $10))\') ';
-    //       sql = sql + 'and ST_Intersects(geom, ST_GeomFromText(\'SRID=4326;POLYGON(($11 $12,$13 $14,$15 $16,$17 $18,$19 $20))\'));';
-        
-    var vals = [bounds._southWest.lng, bounds._southWest.lat, bounds._northEast.lng, bounds._southWest.lat, bounds._northEast.lng, bounds._northEast.lat, bounds._southWest.lng, bounds._northEast.lat, bounds._southWest.lng, bounds._southWest.lat];
-    var vals = vals.concat(vals);
-
-
+    
 
     client.query(sql, function (err, result) {
 
@@ -70,7 +64,7 @@ function getPoints(bounds, res) {
            return;
       }
 
-   
+      console.info('query response', result);
 
       res.send(result);
 
