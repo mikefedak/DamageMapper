@@ -1,10 +1,12 @@
 
 var map = L.map('map', { editable: true });
 
+var editing = false;
+
 $(document).ready(function() { 
     var width = $(window).width();
       if(width <= 800){
-                $('#entrymodal').addClass('bottom-sheet');
+         $('#entrymodal').addClass('bottom-sheet');
       }
 
              
@@ -28,7 +30,9 @@ var geocoder = L.Control.geocoder({
     
 }).addTo(map);
 
-
+geocoder.markGeocode = function(result) {
+    map.fitBounds(result.bbox);
+};
 
 // getting all the markers at once
 function getAllMarkers() {
@@ -36,21 +40,19 @@ function getAllMarkers() {
     var allMarkersObjArray = []; // for marker objects
     var allMarkersGeoJsonArray = []; // for readable geoJson markers
 
-    $.each(map._layers, function (ml) {
+    $.each(map._layers, function (index, obj) {
 
-        if (map._layers[ml].feature) {
-
-            allMarkersObjArray.push(this)
-            allMarkersGeoJsonArray.push(JSON.stringify(this.toGeoJSON()))
+        // remove marker on edit/cancel
+        if(obj["editor"]){
+            map.removeLayer(obj);
         }
+        
     })
 
     console.log(allMarkersObjArray);
 };
 
-geocoder.markGeocode = function(result) {
-    map.fitBounds(result.bbox);
-};
+
 
 
 
@@ -66,7 +68,23 @@ var addEvent = L.Control.extend({
         L.DomEvent
             .addListener(container, 'click', L.DomEvent.stopPropagation)
             .addListener(container, 'click', L.DomEvent.preventDefault)
-            .addListener(container, 'click', function () { map.editTools.startMarker(); });
+            .addListener(container, 'click', function () {
+                
+                var editMark= map.editTools.startMarker(L.latLng(15, -61));
+                
+                editing=true;              
+              
+                $(document).keyup(function(e) {
+                     if (e.keyCode == 27) { // escape key maps to keycode `27`
+                         editing=false;
+                         map.editTools.stopDrawing();
+                         
+                    }
+                });
+
+                
+                });
+
 
         // ... initialize other DOM elements, add listeners, etc.
         var button = L.DomUtil.create('a', 'btn-floating btn-large waves-effect waves-light red', container);
@@ -91,7 +109,11 @@ function removeTooltip(e) {
     tooltip.innerHTML = '';
     tooltip.style.display = 'none';
     L.DomEvent.off(document, 'mousemove', moveTooltip);
-    enterDetails(e);
+    if (editing===true){
+            enterDetails(e);
+    }
+    getAllMarkers();
+
 }
 function moveTooltip(e) {
     tooltip.style.left = e.clientX + 20 + 'px';
@@ -111,18 +133,18 @@ map.on('editable:drawing:end', removeTooltip);
 
 function requestPoints(bounds) {
    
-    reqwest({
-        url: 'http://mapping.site:3000/points'
-      , method: 'post'
-      , data: bounds
-      , error: function(err){console.info('error',err)}
-      , success: function (resp) {
-          console.info('points gotten',resp.rows[0]);
-          L.geoJson(resp.rows[0].row_to_json
-                          , {
+    // reqwest({
+    //     url: 'http://mapping.site:3000/points'
+    //   , method: 'post'
+    //   , data: bounds
+    //   , error: function(err){console.info('error',err)}
+    //   , success: function (resp) {
+    //       console.info('points gotten',resp.rows[0]);
+    //       L.geoJson(resp.rows[0].row_to_json
+    //                       , {
                 
-            }).addTo(map);
-        }
-      });
+    //         }).addTo(map);
+    //     }
+    //   });
 
 }
