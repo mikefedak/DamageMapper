@@ -48,7 +48,7 @@ function getPoints(bounds, res) {
         
      
     
-   var sql="SELECT row_to_json(fc) FROM (SELECT 'FeatureCollection' AS type, array_to_json(array_agg(f)) AS features FROM (SELECT 'Feature' AS type, ST_AsGeoJSON(lg.geom)::json As geometry, row_to_json((SELECT l FROM (SELECT 'IMAGE_URL','DESCRIPTION','Attribution') AS l )) AS properties FROM \"Point_Table\" AS lg ) AS f )  AS fc;"
+   var sql="SELECT row_to_json(fc) FROM (SELECT 'FeatureCollection' AS type, array_to_json(array_agg(f)) AS features FROM (SELECT 'Feature' AS type, ST_AsGeoJSON(lg.geom)::json As geometry, row_to_json((SELECT l FROM (SELECT \"IMAGE_URL\",\"DESCRIPTION\",\"Attribution\") AS l )) AS properties FROM \"Point_Table\" AS lg ) AS f )  AS fc;"
         
                 
              
