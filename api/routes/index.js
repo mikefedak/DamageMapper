@@ -1,32 +1,26 @@
 var express = require('express')
   , router = express.Router()
-  , pg = require('pg');
+  , pg = require('pg')
+  
 
 
-/* GET home page. */
+
+
+
+
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
 router.post('/points', function (req, res, next) {
-
-  console.info('request', req, res);
   getPoints(req.body, res);
 });
-
-
-router.post('/upload', function(){
-  
-  
-  
-});
-
 
 
 function getPoints(bounds, res) {
 
 
-  var connString = "postgres://postgres:stormy-erika-rage@localhost:5432/mapping";
+  var connString = "postgres://postgres:steak@localhost:5432/geonode";
 
 
 
@@ -73,7 +67,7 @@ function getPoints(bounds, res) {
            return;
       }
 
-      console.info('query response', result);
+
 
       res.send(result);
 

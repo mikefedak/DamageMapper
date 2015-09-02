@@ -1,4 +1,5 @@
 var express = require('express');
+
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
@@ -9,6 +10,7 @@ var multer = require('multer');
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
+var uploads = require('./routes/uploads');
 
 var app = express();
 
@@ -29,8 +31,6 @@ var allowCrossDomain = function(req, res, next) {
 };
 
 
-
-
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
@@ -41,29 +41,31 @@ app.use(allowCrossDomain);
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
+app.use(multer({ 
+  dest: './uploads/',
+  
+  limits : { fileSize:3000000 },
+  rename: function(fieldname, filename){   
+        return filename+Date.now();        
+  }   
+            
+
+}).array([ {name: 'thumbnail', maxCount:1},
+{name: 'full', maxCount:1}
+
+      ]));
+
+
+
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
-/*Configure the multer.*/
-
-app.use(multer({ dest: './uploads/',
- rename: function (fieldname, filename) {
-    return filename+Date.now();
-  },
-onFileUploadStart: function (file) {
-  console.log(file.originalname + ' is starting ...')
-},
-onFileUploadComplete: function (file) {
-  console.log(file.fieldname + ' uploaded to  ' + file.path)
-
-}
-}));
-
 
 
 
 
 app.use('/', routes);
 app.use('/users', users);
+app.use('/uploads', uploads);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -95,6 +97,15 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+app.use(function (err, req, res, next) {
+  if (err.code === 'LIMIT_FILE_SIZE') {
+    res.send({ result: 'fail', error: { code: 1001, message: 'File is too big' } })
+    return 
+  }
+
+  // Handle any other errors
+})
 
 
 module.exports = app;
