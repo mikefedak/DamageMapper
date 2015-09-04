@@ -3,9 +3,9 @@ var express = require('express')
   , pg = require('pg')
   , q = require('q');
   
-var connString = "postgres://postgres:steak@localhost:5432/geonode";
+var connString = "postgres://postgres:steak-and-hurricane-flood@localhost:5432/mapping";
 
-var uploadUrl= "http://localhost/api/uploads"
+var uploadUrl= "http://mapping.site/Dominica/api/uploads"
 
 
 

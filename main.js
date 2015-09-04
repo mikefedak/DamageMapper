@@ -2,8 +2,8 @@
 var map = L.map('map', { editable: true });
 
 var editing = false;
-var imgLink="http://localhost/api/uploads/notfound.jpg";
-var siteUrl="http://localhost";
+var imgLink="http://mapping.site/api/uploads/notfound.jpg";
+var siteUrl="http://mapping.site";
 var markers = new L.layerGroup();
 
 $(document).ready(function () {
@@ -189,7 +189,10 @@ $("#save-btn").click(function(){
                         $( "#messages" ).append('Error: '+err); 
                      }
                 , success: function (resp) {
-
+           $('#data')[0].reset();
+           $('#messages').empty();
+           $('#takePictureField').val("");
+ 
                     $('#entrymodal').closeModal();
                       markers.clearLayers();
                     requestPoints();
