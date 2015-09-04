@@ -28,20 +28,18 @@ router.post('/uploads', function (req, res, next) {
     
   })
   .fail(function(err){
-    res.status(500).send('Image Upload Failed')
+    res.status(500).send('Image Upload Failed');
+    res.end();
   });
   
   writeFile(req.body.full_image,"full", curDate)
    .then(function(result){
       req.body.image=uploadUrl+'/'+curDate+'_full.jpg';
-      formtoDB(req.body).then(function(res){
-      res.status(200).send('insert successful');
-    }).fail(function(err){
-       res.status(500).send('Failed DB access')
-    })
+      formtoDB(req.body, res)
   })
   .fail(function(err){
-    res.status(500).send('Image Upload Failed')
+    res.status(500).send('Image Upload Failed');
+    res.end();
   });
 
   
@@ -64,9 +62,9 @@ function writeFile(data,filetype,currentdate){
   return deferred.promise;
 }
 
-function formtoDB(data){
+function formtoDB(data,res){
 
-  var deferred = q.defer();
+
 
   pg.connect(connString, function (err, client, done) {
       var handleError = function (err) {
@@ -90,15 +88,17 @@ function formtoDB(data){
 
     client.query("INSERT INTO \"Point_Table\"(\"IMAGE_URL\",\"THUMB_URL\",\"SOURCE_URL\",\"DESCRIPTION\",\"ATTRIBUTION\",\"EVENT\",\"geom\") values($1, $2, $3, $4, $5, $6, ST_PointFromText($7, 4326))", 
       [data.image, data.thumb,data.image_link,data.description,data.attribution,data.eventType,data.geom],
-      function(err,result){          done();
+      function(err,result){         
+        
+         done();
 
 
         if (err) {
-           console.info('sql error', err);
-           q.reject(err);
+           res.status(500).send('Failed Getting Points')
+
            return;
         }else{
-          q.resolve()
+           res.status(200).send('Row added Successfully');
         }
 
 
@@ -110,7 +110,7 @@ function formtoDB(data){
 
   });
   
-  return deferred.promise;
+
 }
 
 

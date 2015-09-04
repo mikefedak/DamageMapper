@@ -3,7 +3,8 @@ var map = L.map('map', { editable: true });
 
 var editing = false;
 var imgLink="http://localhost/api/uploads/notfound.jpg";
-var siteUrl="http://localhost"
+var siteUrl="http://localhost";
+var markers = new L.layerGroup();
 
 $(document).ready(function () {
     var width = $(window).width();
@@ -23,7 +24,7 @@ selectedCoords = null;
 
 
 map.on('load', function (e) {
-    console.log('load');
+
     requestPoints(e.target.getBounds());
 });
 
@@ -41,21 +42,23 @@ geocoder.markGeocode = function (result) {
 };
 
 // getting all the markers at once
-function getAllMarkers() {
+function removeMarkers(params) {
 
-    var allMarkersObjArray = []; // for marker objects
-    var allMarkersGeoJsonArray = []; // for readable geoJson markers
-
+   
     $.each(map._layers, function (index, obj) {
 
-        // remove marker on edit/cancel
-        if (obj["editor"]) {
-            map.removeLayer(obj);
-        }
+        
+        if(params==="editable"){
+            // remove marker on edit/cancel
+            if (obj["editor"]) {
+                map.removeLayer(obj);
+            }
+        } 
+        
 
     })
 
-    console.log(allMarkersObjArray);
+
 };
 
 
@@ -116,7 +119,7 @@ function removeTooltip(e) {
     if (editing === true) {
      enterDetails(e);
     }
-    getAllMarkers();
+    removeMarkers("editable");
 
 }
 function moveTooltip(e) {
@@ -149,11 +152,11 @@ $("#save-btn").click(function(){
 
     
     var imgURL= $("#imageLink").val();
-    console.info('image url', imgURL);
+
 
     if (imgURL !== null && typeof imgURL !=="undefined" && imgURL.length>0){
           var img = new Image();
-          console.log('save with image url');
+
           img.onload = function(e) {
           fullImg = resizeImage(img,600);
           thumbnail = resizeImage(img,40);  
@@ -182,17 +185,16 @@ $("#save-btn").click(function(){
                 , method: 'post'
                 , data: requestData
                 , error: function (err) { 
-                               $('#messages').empty();
+                        $('#messages').empty();
                         $( "#messages" ).append('Error: '+err); 
                      }
                 , success: function (resp) {
-                    $('#entrymodal').closeModal()
+
+                    $('#entrymodal').closeModal();
+                      markers.clearLayers();
+                    requestPoints();
                 }
                  });
-
-              
-            
-              
               
           };
               img.crossOrigin = 'anonymous';
@@ -219,15 +221,21 @@ $("#save-btn").click(function(){
 
 
               
-              console.info('request data', requestData);
+
                 reqwest({
 
                   url: siteUrl+':3000/uploads'
                 , method: 'post'
                 , data: requestData
-                , error: function (err) {             $('#messages').empty(); $( "#messages" ).append('Error: '+err);  }
+                , error: function (err) {             
+                    $('#messages').empty(); $( "#messages" ).append('Error: '+err); 
+                 }
                 , success: function (resp) {
+
                      $('#entrymodal').closeModal();
+                      markers.clearLayers();
+
+                      requestPoints();
                 }
                  });
     } 
@@ -346,6 +354,8 @@ var dataURLToBlob = function(dataURL) {
 function requestPoints(bounds) {
 
 
+
+
   function onEachFeature(feature, layer) {
 
         if (feature.properties) {
@@ -401,11 +411,14 @@ function requestPoints(bounds) {
                             }));
                         
                         
-                    return ptMarker.addTo(map)
+                        
+                    return markers.addLayer(ptMarker);
 
 
         }
             });
+            
+            markers.addTo(map);
         }
   });
 
