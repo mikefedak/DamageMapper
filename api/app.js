@@ -5,12 +5,12 @@ var favicon = require('serve-favicon');
 var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-var multer = require('multer');
+
 
 
 var routes = require('./routes/index');
 var users = require('./routes/users');
-var uploads = require('./routes/uploads');
+
 
 var app = express();
 
@@ -39,21 +39,9 @@ app.use(allowCrossDomain);
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.use(logger('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(multer({ 
-  dest: './uploads/',
-  
-  limits : { fileSize:3000000 },
-  rename: function(fieldname, filename){   
-        return filename+Date.now();        
-  }   
-            
-
-}).array([ {name: 'thumbnail', maxCount:1},
-{name: 'full', maxCount:1}
-
-      ]));
+app.use(bodyParser.json({limit: '50mb'}));
+app.use(bodyParser.text({limit: '50mb'}));
+app.use(bodyParser.urlencoded({ limit:'50mb', extended: true }));
 
 
 
@@ -63,9 +51,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 
 
+
 app.use('/', routes);
 app.use('/users', users);
-app.use('/uploads', uploads);
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

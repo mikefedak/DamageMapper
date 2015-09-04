@@ -2,11 +2,13 @@
 var map = L.map('map', { editable: true });
 
 var editing = false;
+var imgLink="http://localhost/api/uploads/notfound.jpg";
 
 $(document).ready(function () {
     var width = $(window).width();
   if (width <= 800) {
     $('#entrymodal').addClass('bottom-sheet');
+
   }
 
 
@@ -79,9 +81,8 @@ var addEvent = L.Control.extend({
 
       $(document).keyup(function (e) {
         if (e.keyCode == 27) { // escape key maps to keycode `27`
-                    editing = false;
-                    map.editTools.stopDrawing();
-
+            editing = false;
+            map.editTools.stopDrawing();
         }
       });
 
@@ -91,7 +92,6 @@ var addEvent = L.Control.extend({
 
         // ... initialize other DOM elements, add listeners, etc.
         var button = L.DomUtil.create('a', 'btn-floating btn-large waves-effect waves-light red', container);
-        console.info('button', button);
         var icon = L.DomUtil.create('i', 'material-icons', button);
         icon.innerHTML = "add";
 
@@ -127,44 +127,102 @@ map.on('editable:drawing:start', addTooltip);
 map.on('editable:drawing:end', removeTooltip);
 
 function enterDetails(e) {
-  selectedCoords = e.layer.latlng;
-  $('#entrymodal').openModal();
+
+  selectedCoords = 'POINT('+e.layer._latlng.lng+' '+e.layer._latlng.lat+')';
+  $('#entrymodal').openModal({
+      dismissible: true, // Modal can be dismissed by clicking outside of the modal
+      ready: function() { }, // Callback for Modal open
+      complete: function() {    
+          // reset form fields 
+           $('#data')[0].reset();
+           $('#messages').empty();
+           $('#takePictureField').val("");
+        } 
+    });
 }
 
-$("save-btn").click(function(){
-    $( "messages" ).append('Saving Features'); 
-    $("message").show();
+$("#save-btn").click(function(){
+    $( "#messages" ).append('Saving Features'); 
+    $("#messages").show();
+    
+    console.log('save clicked');
     
     var imgURL= $("#imageLink").val();
+    console.info('image url', imgURL);
 
-    if (imgURL !== null && typeof imgURL !=="undefined"){
+    if (imgURL !== null && typeof imgURL !=="undefined" && imgURL.length>0){
           var img = new Image();
-
+          console.log('save with image url');
           img.onload = function(e) {
               fullImg = resizeImage(img,600);
               thumbnail = resizeImage(img,40);  
+              
+          var requestData = {
+                  'image_link': $('#imageLink').val(),
+                  'attribution': $('#attr').val(),
+                  'description': $('#desc').val(),
+                  'eventType': $('disType').val(),
+                  'thumbnail': thumbnail,
+                  'full_image':fullImg,
+                  'geom':selectedCoords
+                  };
+
+
+              
+              console.info('request data', requestData);
+                reqwest({
+                  //url: 'http://mapping.site:3000/uploads'
+                  url: 'http://localhost:3000/uploads'
+                , method: 'post'
+                , data: requestData
+                , error: function (err) { console.info('error', err) }
+                , success: function (resp) {}
+                 });
+
+              
+            
+              
               
           };
               img.crossOrigin = 'anonymous';
               img.src = imgURL;
     }  else {
-        //Either file upload or null
-        
+                  console.log('save with image uploads');
+
+                var requestData = {
+                  'image_link': $('#imageLink').val(),
+                  'attribution': $('#attr').val(),
+                  'description': $('#desc').val(),
+                  'eventType': $('disType').val(),
+                  'thumbnail': thumbnail,
+                  'full_image':fullImg,
+                  'geom':selectedCoords
+                  };
+
+
+              
+              console.info('request data', requestData);
+                reqwest({
+                  //url: 'http://mapping.site:3000/uploads'
+                  url: 'http://localhost:3000/uploads'
+                , method: 'post'
+                , data: requestData
+                , error: function (err) { console.info('error', err) }
+                , success: function (resp) {}
+                 });
     } 
     
-    $.post( "http://localhost:3000/uploads", function() {
-                  alert( "success" );
-                })
-                  .done(function() {
-                    alert( "second success" );
-                  })
-                  .fail(function() {
-                    alert( "error" );
-                  })
-                  .always(function() {
-                    alert( "finished" );
-                });
+   
+    
+   
 });
+
+
+
+
+
+
+
 
 $("#imageLink").change(function(){
     $("#takePictureField").prop('disabled',true);
@@ -187,7 +245,7 @@ $("#takePictureField").change(function(url){
 
 var processImage = function(file){
 
-    $( "messages" ).append('Ṕrocessing Image');
+
      if(file.type.match(/image.*/)) {
 
         // Load the image
@@ -228,9 +286,10 @@ var resizeImage = function(image,size){
                 canvas.width = width;
                 canvas.height = height;
                 canvas.getContext('2d').drawImage(image, 0, 0, width, height);
-                var dataUrl = canvas.toDataURL('image/jpeg');
+                var dataUrl = canvas.toDataURL('image/jpeg'); //creates base64 image string
                 var resizedImage = dataURLToBlob(dataUrl);
-                return resizedImage;
+                
+                return dataUrl;
 
 
 }
@@ -266,7 +325,7 @@ function requestPoints(bounds) {
 
 
   function onEachFeature(feature, layer) {
-        // does this feature have a property named popupContent?
+
         if (feature.properties) {
             layer.bindPopup(feature.properties.DESCRIPTION);
         }
@@ -280,19 +339,21 @@ function requestPoints(bounds) {
     , data: bounds
     , error: function (err) { console.info('error', err) }
     , success: function (resp) {
-      console.info('points gotten', resp.rows[0]);
-
-
-
+    
 
 
       L.geoJson(resp.rows[0].row_to_json, {
         pointToLayer: function (feature, latlng) {
-                    console.info('image url', feature.properties.IMAGE_URL)
+                    
+                    
+                    if (feature.properties.THUMB_URL){
+                        imgLink=feature.properties.THUMB_URL
+                    }
+
                     if (feature.properties.IMAGE_URL.length > 4) {
                         var ptMarker = L.marker(latlng, {
                             icon: L.icon(L.extend({
-                                iconUrl: feature.properties.IMAGE_URL
+                                iconUrl: imgLink
                             }, {
                                     iconSize: [40, 40],
                                     className: 'leaflet-marker-instagram'
@@ -312,7 +373,7 @@ function requestPoints(bounds) {
 
                     var imageTemplate = '<a href="{link}" title="View Larger Image"><img src="{image_standard}"/></a><p>Description: {caption}</a></p><p>Source: {attr}</p>'
                         ptMarker.bindPopup(L.Util.template(imageTemplate, { link: feature.properties.IMAGE_URL, 
-                            caption: feature.properties.DESCRIPTION, image_standard: feature.properties.IMAGE_URL, attr: feature.properties.Attribution},  
+                            caption: feature.properties.DESCRIPTION, image_standard: feature.properties.SOURCE_URL, attr: feature.properties.ATTRIBUTION},  
                             {
                                 className: 'leaflet-popup-instagram'
                             }));

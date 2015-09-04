@@ -2,10 +2,13 @@
 body {
     padding: 0;
     margin: 0;
+	overflow: hidden;
 }
 
 
-#map { height: 100%; }
+#map { height: 100%; 
+	
+	}
 
 
  #tooltip {
@@ -20,6 +23,7 @@ body {
         font-size: 12px;
         height: 20px;
         line-height: 20px;
+		
 }
 
 .leaflet-control-geocoder-expanded {
@@ -112,4 +116,14 @@ body {
 }
 .leaflet-retina .leaflet-cluster-instagram b {
 	left: 68px;
+}
+
+.checkboxList{
+	display: inline;
+}
+
+@media (max-width: 800px) {
+  .checkboxList {
+    display: block;
+  }
 }

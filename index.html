@@ -18,36 +18,73 @@
 		<script src="bower_components/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 		<div id="map"></div>
 		<div id='tooltip'></div>
-		<div id="entrymodal" class="modal">
+		<div id="entrymodal" class="modal" style="max-height:85%">
 			<div class="modal-content">
-				<h3>Information</h3>
-				<input name="imagefile[]" type="file" id="takePictureField" accept="image/*"  />
-
-				<form id="data" class="col s12" method="post" enctype="multipart/form-data">
-					<i class="material-icons prefix">folder</i>
+				
+				<h4>Enter Information</h4>
+				<div>Click 'Choose File'to grab an image from your device or enter a link to an existing image (it will be downloaded).
+					Click save (below) when done or click cancel to close this window and clear your entries.  
+				</div>
+				</br>
+				
+				<input name="imagefile[]" type="file" id="takePictureField"  accept="image/*" />
+											
+				<form id="data" class="col s12" enctype="multipart/form-data">
 					<!--<input type="file" id="fileinput" placeholder="Upload an Image" />-->
-					<div class="input-field col s6">
-						<i class="material-icons prefix">link</i>
-						<input  id="imageLink" type="text"></input>
-						<label for="icon_prefix">Link to Image</label>
-					</div>
 					<div class="row">
 						<div class="input-field col s12">
-							<i class="material-icons prefix">comment</i>
-							<textarea id="textarea1" class="materialize-textarea"></textarea>
-							<label for="textarea1">Description</label>
+							<input id="imageLink" type="text"></input>
+							<label for="icon_prefix">Link to Image</label>
 						</div>
 					</div>
 					<div class="row">
 						<div class="input-field col s12">
 							<input id="attr" type="text"></input>
-							<label for="attr">Attribution</label>
+							<label for="attr">Image Source</label>
 						</div>
+					</div>
+					<div class="row">
+						<div class="input-field col s12">
+							<textarea id="desc" class="materialize-textarea"></textarea>
+							<label for="desc">Description</label>
+						</div>
+					</div>
+					
+					<div class="row">
+						<fieldset class="group">
+							<legend>Event Type (check all that apply)</legend>
+							<ul class="checkbox">
+								<li class="checkboxList">
+									<input type="checkbox" name="disType" id="cb7" value="Mass movement" />
+									<label for="cb7">Landslide</label>
+								</li>
+								<li class="checkboxList">
+									<input type="checkbox" name="disType" id="cb8" value="Flood" />
+									<label for="cb8">Flood</label>
+								</li>
+								<li class="checkboxList">
+									<input type="checkbox" name="disType" id="cb9" value="Storm Surge" />
+									<label for="cb9">Storm Surge</label>
+								</li>
+								<li class="checkboxList">
+									<input type="checkbox" name="disType" id="cb10" value="High Winds" />
+									<label for="cb10">High Winds</label>
+								</li>
+								<li class="checkboxList">
+									<input type="checkbox" name="disType" id="cb11" value="Sinkhole" />
+									<label for="cb11">Sinkhole</label>
+								</li>
+								<li class="checkboxList">
+									<input type="checkbox" name="disType" id="cb12" value="Erosion" />
+									<label for="cb12">Erosion</label>
+								</li>
+							</ul>
+						</fieldset>
 					</div>
 				</form>
 			</div>
 			<div class="modal-footer">
-				<div id ="messages" style="display:none"></div>
+				<div id="messages" style="display:none"></div>
 				<a href="#!" id="cancel-btn" class=" modal-action modal-close waves-effect waves-green btn-flat">Cancel</a>
 				<a href="#!" id="save-btn" class=" modal-action waves-effect waves-green btn-flat">Save</a>
 			</div>
