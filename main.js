@@ -3,6 +3,7 @@ var map = L.map('map', { editable: true });
 
 var editing = false;
 var imgLink="http://localhost/api/uploads/notfound.jpg";
+var siteUrl="http://localhost"
 
 $(document).ready(function () {
     var width = $(window).width();
@@ -145,7 +146,7 @@ $("#save-btn").click(function(){
     $( "#messages" ).append('Saving Features'); 
     $("#messages").show();
     
-    console.log('save clicked');
+
     
     var imgURL= $("#imageLink").val();
     console.info('image url', imgURL);
@@ -154,14 +155,19 @@ $("#save-btn").click(function(){
           var img = new Image();
           console.log('save with image url');
           img.onload = function(e) {
-              fullImg = resizeImage(img,600);
-              thumbnail = resizeImage(img,40);  
+          fullImg = resizeImage(img,600);
+          thumbnail = resizeImage(img,40);  
+              
+          var ckVal = [];
+        $('#checkboxes input:checked').each(function() {
+            ckVal.push(this.value);
+        });
               
           var requestData = {
                   'image_link': $('#imageLink').val(),
                   'attribution': $('#attr').val(),
                   'description': $('#desc').val(),
-                  'eventType': $('disType').val(),
+                  'eventType': ckVal.toString(),
                   'thumbnail': thumbnail,
                   'full_image':fullImg,
                   'geom':selectedCoords
@@ -169,14 +175,19 @@ $("#save-btn").click(function(){
 
 
               
-              console.info('request data', requestData);
+
                 reqwest({
-                  //url: 'http://mapping.site:3000/uploads'
-                  url: 'http://localhost:3000/uploads'
+
+                  url: siteUrl+':3000/uploads'
                 , method: 'post'
                 , data: requestData
-                , error: function (err) { console.info('error', err) }
-                , success: function (resp) {}
+                , error: function (err) { 
+                               $('#messages').empty();
+                        $( "#messages" ).append('Error: '+err); 
+                     }
+                , success: function (resp) {
+                    $('#entrymodal').closeModal()
+                }
                  });
 
               
@@ -187,13 +198,20 @@ $("#save-btn").click(function(){
               img.crossOrigin = 'anonymous';
               img.src = imgURL;
     }  else {
-                  console.log('save with image uploads');
+
+                       
+         var ckVal = [];
+        $('#checkboxes input:checked').each(function() {
+            ckVal.push(this.value);
+        });
+        
+
 
                 var requestData = {
                   'image_link': $('#imageLink').val(),
                   'attribution': $('#attr').val(),
                   'description': $('#desc').val(),
-                  'eventType': $('disType').val(),
+                  'eventType': ckVal.toString(),
                   'thumbnail': thumbnail,
                   'full_image':fullImg,
                   'geom':selectedCoords
@@ -203,12 +221,14 @@ $("#save-btn").click(function(){
               
               console.info('request data', requestData);
                 reqwest({
-                  //url: 'http://mapping.site:3000/uploads'
-                  url: 'http://localhost:3000/uploads'
+
+                  url: siteUrl+':3000/uploads'
                 , method: 'post'
                 , data: requestData
-                , error: function (err) { console.info('error', err) }
-                , success: function (resp) {}
+                , error: function (err) {             $('#messages').empty(); $( "#messages" ).append('Error: '+err);  }
+                , success: function (resp) {
+                     $('#entrymodal').closeModal();
+                }
                  });
     } 
     
@@ -258,7 +278,7 @@ var processImage = function(file){
 
                 fullImg = resizeImage(image,600);
                 thumbnail = resizeImage(image,40);
-                $( "messages" ).hide();
+
                                 
             }
             image.src = readerEvent.target.result;
@@ -268,6 +288,8 @@ var processImage = function(file){
 }
 
 var resizeImage = function(image,size){
+
+    
        var canvas = document.createElement('canvas'),
                     max_size = size,
                     width = image.width,
@@ -333,8 +355,8 @@ function requestPoints(bounds) {
 
 
     reqwest({
-      //url: 'http://mapping.site:3000/points'
-      url: 'http://localhost:3000/points'
+
+      url: siteUrl+':3000/points'
     , method: 'post'
     , data: bounds
     , error: function (err) { console.info('error', err) }
@@ -371,9 +393,9 @@ function requestPoints(bounds) {
                         });
                     }
 
-                    var imageTemplate = '<a href="{link}" title="View Larger Image"><img src="{image_standard}"/></a><p>Description: {caption}</a></p><p>Source: {attr}</p>'
-                        ptMarker.bindPopup(L.Util.template(imageTemplate, { link: feature.properties.IMAGE_URL, 
-                            caption: feature.properties.DESCRIPTION, image_standard: feature.properties.SOURCE_URL, attr: feature.properties.ATTRIBUTION},  
+                    var imageTemplate = '<a href="{link}" title="View Larger Image"><img src="{image_standard}"/></a><p>Description: {caption}</a></p><p>Source: {attr}</p><p>Events: {event}</p>'
+                        ptMarker.bindPopup(L.Util.template(imageTemplate, { link: feature.properties.SOURCE_URL, 
+                            caption: feature.properties.DESCRIPTION, image_standard: feature.properties.IMAGE_URL,event: feature.properties.EVENT, attr: feature.properties.ATTRIBUTION},  
                             {
                                 className: 'leaflet-popup-instagram'
                             }));
