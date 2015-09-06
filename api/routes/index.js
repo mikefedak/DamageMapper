@@ -1,12 +1,12 @@
 var express = require('express')
   , router = express.Router()
   , pg = require('pg')
-  , q = require('q');
+  , q = require('q'),
+  config = require('../config');
   
 //Move these into a config file and add the config file to gitignore
-var connString = "postgres://postgres:steak@localhost:5432/geonode";
-var uploadUrl= "http://localhost/api/uploads";
-
+var connString = config.connString;
+var uploadUrl = config.uploadUrl;
 
 router.get('/', function (req, res, next) {
   res.render('index', { title: 'Express' });

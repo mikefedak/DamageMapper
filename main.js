@@ -3,8 +3,7 @@
 var map = L.map('map');
 
 var editing = false,
-imgLink="http://localhost/api/uploads/notfound.jpg", //This should be based on a siteurl from the configs
-siteUrl="http://localhost",
+siteUrl="http://localhost", //would be good to move this to the config file also
 markers = new L.layerGroup(),
 fullImg = null,
 thumbnail =null,
@@ -18,15 +17,7 @@ $(document).ready(function () {
   if (width <= 800) {
     $('#entrymodal').addClass('bottom-sheet');
     
-    /*
-    --- Need to add:
-    1. Fix for modal closing on small displays the overlay is not being removed
-    2. Sizing for popups, should be based on the size of the display and not a fixed size as currently on small screens
-    3. Look into possible retina display issues 
-    4. Drop the marker on click for small displays? No dragging     
-    6. Optional - Search bar edits, may be able to use media queries for this. S    
-    */
-
+    
   }
 
 
