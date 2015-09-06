@@ -90,6 +90,8 @@ var addEvent = L.Control.extend({
              //change cursor
              $('#map').addClass('pointer-cursor');
              
+             Materialize.toast('Editing engaged: Click anywhere on the map to add an event', 4000); 
+             
              map.on('click', function(event){
                  enterDetails(event);
              });
@@ -101,8 +103,9 @@ var addEvent = L.Control.extend({
               $(document).keyup(function (e) {
                 if (e.keyCode == 27) { // escape key maps to keycode `27`
                     editing = false;
-                    //map.editTools.stopDrawing();
+
                     $('#map').removeClass('pointer-cursor');
+                     map.off('click');
                 }
               });
 

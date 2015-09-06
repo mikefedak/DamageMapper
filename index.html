@@ -3,7 +3,7 @@
 		<title>Dominica TS Erika Damage Map</title>
 		<!--<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css"
 		/>-->
-		<link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css"/>		
+		<link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css" />
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" href="bower_components/leaflet-control-geocoder/dist/Control.Geocoder.css" />
@@ -13,37 +13,85 @@
 	<body>
 		<!--<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>-->
 		<script src="bower_components/leaflet/dist/leaflet.js"></script>
-		<script src="bower_components/leaflet.editable/leaflet.editable-min.js"></script>
 		<script src="bower_components/reqwest/reqwest.min.js"></script>
 		<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/js/materialize.min.js"></script>
 		<script src="bower_components/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 		<div id="map"></div>
 		<div id='tooltip'></div>
-		<div id="detailsModal" class="modal" >
-			<div class="modal-content" id="infoTemplateContent">
+		<div id="detailsModal" class="modal">
+			<div class="modal-content" id="infoTemplateContent"></div>
+			<div class="modal-footer">
+				<a href="#!" id="cancel-btn" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+			</div>
+		</div>
+		<div id="infoModal" class="modal">
+			<div class="modal-content" style="">
+				<div class="row">
+					<div class="col s2">
+						<img style="width:100%" src="https://scontent-mia1-1.xx.fbcdn.net/hphotos-xfp1/v/t1.0-9/10406848_557314794434353_728564404645710844_n.jpg?oh=67a6f35227b032b7fbda176367b49d5b&oe=566817BE"
+						/>
+					</div>
+					<div class="col s10">
+						<strong>Welcome to the Tropical Storm Erika Damage Map</strong>
+						<p>
+							<strong>Contact:</strong>
+							</br>
+							<a href="https://www.facebook.com/DominicaTsErikaDamageMap">Facebook Group</a></br>
+							<a href="https://github.com/mikefedak/DamageMapper">Github</a>
+							</br>Camron Valerie:
+							<a href="mailto:Everydesignstudio@gmail.com">Email</a>,
+							<a href="https://twitter.com/everyvision">Twitter</a>
+
+						</p>
+					</div>
+				</div>
+				<div class="row">
+					<p>
+						<strong>Instructions:</strong>
+						<p><strong>Viewing:</strong> Click on any of the thumbnails on the map to view a larger image as well as details </p>
+						
+						<p><strong>Adding:</strong> Use the red button in the bottom right corner to begin adding features. Once you click on the button, editing mode is triggered and 
+						the cursor changes to a pointer. Click anywhere on the map to add an 'event' and trigger the input form. You can press the 'esc' key any time to exit this mode
+						
+						The form allows two ways of uploading images:
+						<p>
+						1. Using the choose file button to upload from your device 
+						</p>
+						<p>
+						2. Using a link to an existing image (note that this not work with images from Dominica News Online since they do not allow CORS). This however does work with twitter, instagram, and facebook images
+						You can only upload one image at a time.
+						</p>
+						
+						Once filled in, you can click save and if successful, the form will close. If it fails, you will get an error message.
+						
+						<p>
+						Contact us in case of errors or if you have suggestions. 
+						</p>									
+						</p>
+						<strong>Acknowledgements:</strong>
+						<p>
+							The following people contributed to the development process:
+							<a href="mailto:davidsonedwards8@gmail.com">Anthony Edwards</a>,
+							
+						</p>			
+						
+					</p>
+					
+				</div>
+
 			</div>
 			<div class="modal-footer">
 				<a href="#!" id="cancel-btn" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
-		    </div>
-			
-		</div>
-		<div id="infoModal" class="modal">
-			<div class="modal-content" >
-				
 			</div>
 		</div>
 		<div id="entrymodal" class="modal">
 			<div class="modal-content">
-				
 				<h4>Enter Information</h4>
-				<div>Click 'Choose File'to grab an image from your device or enter a link to an existing image (it will be downloaded).
-					Click save (below) when done or click cancel to close this window and clear your entries.  
-				</div>
+				<div>Click 'Choose File'to grab an image from your device or enter a link to an existing image (it will be downloaded). Click
+					save (below) when done or click cancel to close this window and clear your entries.</div>
 				</br>
-				
-				<input name="imagefile[]" type="file" id="takePictureField"  accept="image/*" />
-											
+				<input name="imagefile[]" type="file" id="takePictureField" accept="image/*" />
 				<form id="data" class="col s12" enctype="multipart/form-data">
 					<!--<input type="file" id="fileinput" placeholder="Upload an Image" />-->
 					<div class="row">
@@ -64,7 +112,6 @@
 							<label for="desc">Description</label>
 						</div>
 					</div>
-					
 					<div class="row" id="checkboxes">
 						<fieldset class="group">
 							<legend>Event Type (check all that apply)</legend>
