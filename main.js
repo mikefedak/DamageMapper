@@ -10,6 +10,11 @@ thumbnail =null,
 selectedCoords = null,
 width = $(window).width();
 
+var editing = false;
+
+var siteUrl="http://mapping.site";
+var markers = new L.layerGroup();
+
 
 //Check the window size and change elements accordingly
 $(document).ready(function () {
@@ -177,6 +182,7 @@ $("#save-btn").click(function(){
                   resetMap();                  
               }
           });
+
 
           };
           img.crossOrigin = 'anonymous';
