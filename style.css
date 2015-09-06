@@ -129,6 +129,15 @@ body {
 	display: none;
 }
 
+.pointer-cursor{
+	 cursor:pointer;
+}
+
+.modal{
+	max-height: 85%
+}
+
+
 @media (max-width: 800px) {
   .checkboxList {
     display: block;

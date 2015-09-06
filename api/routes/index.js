@@ -3,10 +3,9 @@ var express = require('express')
   , pg = require('pg')
   , q = require('q');
   
+//Move these into a config file and add the config file to gitignore
 var connString = "postgres://postgres:steak@localhost:5432/geonode";
-
-var uploadUrl= "http://localhost/api/uploads"
-
+var uploadUrl= "http://localhost/api/uploads";
 
 
 router.get('/', function (req, res, next) {
@@ -19,8 +18,7 @@ router.post('/points', function (req, res, next) {
 
 router.post('/uploads', function (req, res, next) {
   //console.info('uploads endpoint hit', req.body);
-  var curDate=Date.now();
-  
+  var curDate=Date.now();  
 
   writeFile(req.body.thumbnail,"thumb", curDate)
   .then(function(result){
@@ -35,7 +33,7 @@ router.post('/uploads', function (req, res, next) {
   writeFile(req.body.full_image,"full", curDate)
    .then(function(result){
       req.body.image=uploadUrl+'/'+curDate+'_full.jpg';
-      formtoDB(req.body, res)
+      formtoDB(req.body, res);
   })
   .fail(function(err){
     res.status(500).send('Image Upload Failed');
@@ -55,7 +53,7 @@ function writeFile(data,filetype,currentdate){
     if(err){
         deferred.reject(err);    
     } else{
-      deferred.resolve(fileName)
+      deferred.resolve(fileName);
     }
 
   });
@@ -63,8 +61,6 @@ function writeFile(data,filetype,currentdate){
 }
 
 function formtoDB(data,res){
-
-
 
   pg.connect(connString, function (err, client, done) {
       var handleError = function (err) {
@@ -80,10 +76,7 @@ function formtoDB(data,res){
     };
       
     // handle an error from the connection
-    if (handleError(err)) return;
-    
-    //Need to figure out a sql query that will return a feature collection 
-
+    if (handleError(err)) return;  
   
 
     client.query("INSERT INTO \"Point_Table\"(\"IMAGE_URL\",\"THUMB_URL\",\"SOURCE_URL\",\"DESCRIPTION\",\"ATTRIBUTION\",\"EVENT\",\"geom\") values($1, $2, $3, $4, $5, $6, ST_PointFromText($7, 4326))", 
@@ -91,7 +84,6 @@ function formtoDB(data,res){
       function(err,result){         
         
          done();
-
 
         if (err) {
            res.status(500).send('Failed Getting Points')
@@ -101,11 +93,6 @@ function formtoDB(data,res){
            res.status(200).send('Row added Successfully');
         }
 
-
-
-      
-
-        
       });
 
   });
@@ -137,33 +124,22 @@ function getPoints(bounds, res) {
     // handle an error from the connection
     if (handleError(err)) return;
     
-    //Need to figure out a sql query that will return a feature collection 
-
-   
-        
-     
+  //Get points from the server as a geojson feature collection     
     
-   var sql="SELECT row_to_json(fc) FROM (SELECT 'FeatureCollection' AS type, array_to_json(array_agg(f)) AS features FROM (SELECT 'Feature' AS type, ST_AsGeoJSON(lg.geom)::json As geometry, row_to_json((SELECT l FROM (SELECT \"IMAGE_URL\",\"THUMB_URL\",\"DESCRIPTION\",\"ATTRIBUTION\",\"SOURCE_URL\",\"EVENT\") AS l )) AS properties FROM \"Point_Table\" AS lg ) AS f )  AS fc;"
+   var sql="SELECT row_to_json(fc) FROM (SELECT 'FeatureCollection' AS type, array_to_json(array_agg(f)) \
+   AS features FROM (SELECT 'Feature' AS type, ST_AsGeoJSON(lg.geom)::json As geometry, \
+   row_to_json((SELECT l FROM (SELECT \"IMAGE_URL\",\"THUMB_URL\",\"DESCRIPTION\",\"ATTRIBUTION\",\"SOURCE_URL\",\"EVENT\") AS l ))\
+    AS properties FROM \"Point_Table\" AS lg ) AS f )  AS fc;"
         
-                
-             
-    
-
     client.query(sql, function (err, result) {
-
+      
         done();
-
-
+        
         if (err) {
            res.status(500).send('Failed Getting Points')
            return;
-      }
-
-
-
+        }
        res.send(result);
-
-
     });
 
 
@@ -171,10 +147,6 @@ function getPoints(bounds, res) {
 
 
 }
-
-
-
-
 
 
 

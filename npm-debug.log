@@ -1,18 +1,18 @@
 0 info it worked if it ends with ok
-1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'install', '-d' ]
+1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'start' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.37
 4 verbose node symlink /usr/bin/node
-5 error install Couldn't read dependencies
-6 error package.json ENOENT, open '/home/fedakm/erika/package.json'
-6 error package.json This is most likely not a problem with npm itself.
-6 error package.json npm can't find a package.json file in your current directory.
+5 error Error: ENOENT, open '/home/fedakm/dominica/package.json'
+6 error If you need help, you may report this *entire* log,
+6 error including the npm and node versions, at:
+6 error     <http://github.com/npm/npm/issues>
 7 error System Linux 3.16.0-43-generic
-8 error command "/usr/bin/node" "/usr/bin/npm" "install" "-d"
-9 error cwd /home/fedakm/erika
+8 error command "/usr/bin/node" "/usr/bin/npm" "start"
+9 error cwd /home/fedakm/dominica
 10 error node -v v0.10.37
 11 error npm -v 1.4.28
-12 error path /home/fedakm/erika/package.json
-13 error code ENOPACKAGEJSON
+12 error path /home/fedakm/dominica/package.json
+13 error code ENOENT
 14 error errno 34
 15 verbose exit [ 34, true ]

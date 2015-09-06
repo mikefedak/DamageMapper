@@ -1,8 +1,9 @@
 <html>
 	<head>
 		<title>Dominica TS Erika Damage Map</title>
-		<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css"
-		/>
+		<!--<link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.css"
+		/>-->
+		<link rel="stylesheet" href="bower_components/leaflet/dist/leaflet.css"/>		
 		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.97.0/css/materialize.min.css">
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link rel="stylesheet" href="bower_components/leaflet-control-geocoder/dist/Control.Geocoder.css" />
@@ -10,7 +11,8 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	</head>
 	<body>
-		<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>
+		<!--<script src="http://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.3/leaflet.js"></script>-->
+		<script src="bower_components/leaflet/dist/leaflet.js"></script>
 		<script src="bower_components/leaflet.editable/leaflet.editable-min.js"></script>
 		<script src="bower_components/reqwest/reqwest.min.js"></script>
 		<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>
@@ -18,7 +20,20 @@
 		<script src="bower_components/leaflet-control-geocoder/dist/Control.Geocoder.js"></script>
 		<div id="map"></div>
 		<div id='tooltip'></div>
-		<div id="entrymodal" class="modal" style="max-height:85%">
+		<div id="detailsModal" class="modal" >
+			<div class="modal-content" id="infoTemplateContent">
+			</div>
+			<div class="modal-footer">
+				<a href="#!" id="cancel-btn" class="modal-action modal-close waves-effect waves-green btn-flat">Close</a>
+		    </div>
+			
+		</div>
+		<div id="infoModal" class="modal">
+			<div class="modal-content" >
+				
+			</div>
+		</div>
+		<div id="entrymodal" class="modal">
 			<div class="modal-content">
 				
 				<h4>Enter Information</h4>

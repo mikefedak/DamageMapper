@@ -1,5 +1,8 @@
 0 info it worked if it ends with ok
-1 verbose cli [ '/usr/bin/node', '/usr/bin/npm', 'start' ]
+1 verbose cli [ '/usr/bin/node',
+1 verbose cli   '/usr/bin/npm',
+1 verbose cli   'start',
+1 verbose cli   '/home/fedakm/dominica/api/' ]
 2 info using npm@1.4.28
 3 info using node@v0.10.37
 4 verbose node symlink /usr/bin/node
@@ -9,7 +12,7 @@
 8 verbose unsafe-perm in lifecycle true
 9 info api@0.0.0 Failed to exec start script
 10 error api@0.0.0 start: `node ./bin/www`
-10 error Exit status 8
+10 error Exit status 143
 11 error Failed at the api@0.0.0 start script.
 11 error This is most likely a problem with the api package,
 11 error not with npm itself.
@@ -19,7 +22,7 @@
 11 error     npm owner ls api
 11 error There is likely additional logging output above.
 12 error System Linux 3.16.0-43-generic
-13 error command "/usr/bin/node" "/usr/bin/npm" "start"
+13 error command "/usr/bin/node" "/usr/bin/npm" "start" "/home/fedakm/dominica/api/"
 14 error cwd /home/fedakm/dominica/api
 15 error node -v v0.10.37
 16 error npm -v 1.4.28
